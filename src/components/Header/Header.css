@@ -1,0 +1,28 @@
+.dash.navbar{
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.bg-light{
+    background-color: #fafafa;
+}
+
+.shadow{
+    box-shadow: 0 4px 10px 0 rgb(200 200 200 / 50%);
+}
+
+.nav-link{
+    align-items: center;
+    display: flex;
+}
+
+.nav-link.active{
+    /* color: #007bff !important; */
+}
+
+.logoutBtn{
+    color:#dc3545 !important;
+}
+.logoutBtn:hover{
+    color: white !important;
+}

@@ -1,0 +1,17 @@
+.longLine{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.mw-100{
+    max-width: 100px !important;
+}
+
+.mw-200{
+    max-width: 200px !important;
+}
+
+.pt-cur{
+    cursor: pointer;
+}
