@@ -29,10 +29,7 @@ const PageRouter = (data) => {
           path="/contact"
           render={(props) => <Contact {...data} {...props} />}
         />
-        <Route
-          path="/help"
-          render={(props) => <Help {...data} {...props} />}
-        />
+        <Route path="/help" render={(props) => <Help {...data} {...props} />} />
         <Route
           path="/settings"
           render={(props) => <Settings {...data} {...props} />}

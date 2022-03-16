@@ -181,7 +181,8 @@ const Contact = () => {
                           size="22"
                           strokeWidth="1.5"
                           className="pt-1 pr-1"
-                        />{" "}Send
+                        />{" "}
+                        Send
                       </button>
                     </td>
                   </tr>

@@ -37,25 +37,53 @@ const Header = (props) => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
-            <a className={window.location.pathname==="/coupons"||window.location.pathname==="/"?"nav-link active text-primary":"nav-link"} href="/coupons">
+            <a
+              className={
+                window.location.pathname === "/coupons" ||
+                window.location.pathname === "/"
+                  ? "nav-link active text-primary"
+                  : "nav-link"
+              }
+              href="/coupons"
+            >
               <Icon.ShoppingBag size="18" strokeWidth="1.5" className="mr-2" />{" "}
               Coupons
             </a>
           </li>
           <li className="nav-item">
-            <a className={window.location.pathname==="/contact"?"nav-link active text-danger":"nav-link"} href="/contact">
-              <Icon.Mail size="18" strokeWidth="1.5" className="mr-2" />{" "}
-              Contact
+            <a
+              className={
+                window.location.pathname === "/contact"
+                  ? "nav-link active text-danger"
+                  : "nav-link"
+              }
+              href="/contact"
+            >
+              <Icon.Mail size="18" strokeWidth="1.5" className="mr-2" /> Contact
             </a>
           </li>
           <li className="nav-item">
-            <a className={window.location.pathname==="/help"?"nav-link active text-info":"nav-link"} href="/help">
+            <a
+              className={
+                window.location.pathname === "/help"
+                  ? "nav-link active text-info"
+                  : "nav-link"
+              }
+              href="/help"
+            >
               <Icon.HelpCircle size="18" strokeWidth="1.5" className="mr-2" />{" "}
               Help
             </a>
           </li>
           <li className="nav-item">
-            <a className={window.location.pathname==="/settings"?"nav-link active text-dark":"nav-link"} href="/settings">
+            <a
+              className={
+                window.location.pathname === "/settings"
+                  ? "nav-link active text-dark"
+                  : "nav-link"
+              }
+              href="/settings"
+            >
               <Icon.Settings size="18" strokeWidth="1.5" className="mr-2" />{" "}
               Settings
             </a>
@@ -75,51 +103,97 @@ const Header = (props) => {
                     <a className="nav-link disabled" href="/">Disabled</a>
                 </li> */}
         </ul>
-        {window.location.pathname==="/coupons"||window.location.pathname==="/"?<>
-          <div className="navbar-nav my-2 my-lg-0">
-            <a className="btn btn-light align-items-center d-flex mr-2" href="/coupons" data-toggle="modal" data-target="#addModel">
-                <Icon.Plus size="18" strokeWidth="1.5" className="mr-2" />{" "}
-                Add
+        {window.location.pathname === "/coupons" ||
+        window.location.pathname === "/" ? (
+          <>
+            <div className="navbar-nav my-2 my-lg-0">
+              <a
+                className="btn btn-light align-items-center d-flex mr-2"
+                href="/coupons"
+                data-toggle="modal"
+                data-target="#addModel"
+              >
+                <Icon.Plus size="18" strokeWidth="1.5" className="mr-2" /> Add
               </a>
-            <a className="btn btn-light align-items-center d-flex mr-2" href="/coupons">
+              <a
+                className="btn btn-light align-items-center d-flex mr-2"
+                href="/coupons"
+              >
                 <Icon.RefreshCcw size="15" strokeWidth="1.5" className="mr-2" />{" "}
                 Refresh
               </a>
-          </div>
-          <form className="form-inline my-2 my-lg-0" onSubmit={(e)=>{
-            e.preventDefault();
-            const search=document.getElementById("input-search").value;
-            console.log(search);
-            axios
-              .post(`${url}/api/admin/search-coupon-by-school`, {
-                schoolName: search,
-              })
-              .then((res) => {
-                console.log(res);
-                props.setcouponsData(res.data.result || null);
-              })
-              .catch((err) => {
-                console.log(err, err.response);
-                props.setMsgData({ message: err.response.data.message, type: err.response.status } || null );
-              })
-          }}>
-            <input className="form-control mr-sm-2" type="search" placeholder="Search school name" aria-label="Search" id="input-search"/>
-            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
-          <a className="btn btn-outline-danger color-white align-items-center d-flex ml-2 logoutBtn" onClick={()=>{
-            sessionStorage.clear();
-            history.push("/");
-          }}>
-                <Icon.LogOut size="18" strokeWidth="1.5" className="mr-2" />{" "}
-                Sign out
-              </a>
-        </>:<a className="btn btn-outline-danger color-white align-items-center d-flex ml-2 logoutBtn" onClick={()=>{
-            sessionStorage.clear();
-            history.push("/");
-          }}>
-                <Icon.LogOut size="18" strokeWidth="1.5" className="mr-2" />{" "}
-                Sign out
-              </a>}
+            </div>
+            <form
+              className="form-inline my-2 my-lg-0"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const search = document.getElementById("input-search").value;
+                console.log(search);
+                axios
+                  .post(
+                    `${url}/api/admin/search-coupon-by-school`,
+                    {
+                      schoolName: search,
+                    },
+                    {
+                      headers: {
+                        "x-access-token":
+                          window.sessionStorage.getItem("Token"),
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    console.log(res);
+                    props.setcouponsData(res.data.result || null);
+                  })
+                  .catch((err) => {
+                    console.log(err, err.response);
+                    props.setMsgData(
+                      {
+                        message: err.response.data.message,
+                        type: err.response.status,
+                      } || null
+                    );
+                  });
+              }}
+            >
+              <input
+                className="form-control mr-sm-2"
+                type="search"
+                placeholder="Search school name"
+                aria-label="Search"
+                id="input-search"
+              />
+              <button
+                className="btn btn-outline-success my-2 my-sm-0"
+                type="submit"
+              >
+                Search
+              </button>
+            </form>
+            <a
+              className="btn btn-outline-danger color-white align-items-center d-flex ml-2 logoutBtn"
+              onClick={() => {
+                sessionStorage.clear();
+                history.push("/");
+              }}
+            >
+              <Icon.LogOut size="18" strokeWidth="1.5" className="mr-2" /> Sign
+              out
+            </a>
+          </>
+        ) : (
+          <a
+            className="btn btn-outline-danger color-white align-items-center d-flex ml-2 logoutBtn"
+            onClick={() => {
+              sessionStorage.clear();
+              history.push("/");
+            }}
+          >
+            <Icon.LogOut size="18" strokeWidth="1.5" className="mr-2" /> Sign
+            out
+          </a>
+        )}
       </div>
     </nav>
   );

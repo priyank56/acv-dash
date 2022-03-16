@@ -2,36 +2,30 @@ import React from "react";
 import axios from "axios";
 import * as Icon from "react-feather";
 import Header from "../../Header/Header";
-import { useLocation,useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import "./Coupons.css";
 
 const Coupons = (props) => {
-  const location = useLocation();
   const history = useHistory();
   const url = "https://acv-backend-demo.azurewebsites.net";
   const [couponsData, setcouponsData] = React.useState(null);
   const [msgData, setMsgData] = React.useState(null);
-  const [setUser] = React.useState(null);
-  const [setToken] = React.useState(null);
 
   React.useEffect(() => {
-    const tkn=window.sessionStorage.getItem("Token");
-    const usr=window.sessionStorage.getItem("User");
-    if(tkn&&usr){
-      setUser(usr);
-      setToken(tkn);
-    }else{
-      history.push('/')
+    const tkn = window.sessionStorage.getItem("Token");
+    const usr = window.sessionStorage.getItem("User");
+    if (!tkn || !usr) {
+      history.push("/");
     }
-  },[]);
+  }, []);
   React.useEffect(() => {
     document.getElementsByClassName("alert")[0]?.classList.add("show");
     axios
-      .get(`${url}/api/admin/get-coupon-user`,{
-        headers:{
-          "x-access-token":window.sessionStorage.getItem("Token")
-        }
+      .get(`${url}/api/admin/get-coupon-user`, {
+        headers: {
+          "x-access-token": window.sessionStorage.getItem("Token"),
+        },
       })
       .then((res) => {
         console.log(res);
@@ -39,8 +33,8 @@ const Coupons = (props) => {
       })
       .catch((err) => {
         console.log(err, err.response);
-        if(err?.response.status===401){
-          history.push('/');
+        if (err?.response.status === 401) {
+          history.push("/");
           sessionStorage.clear();
         }
         setMsgData(
@@ -60,13 +54,17 @@ const Coupons = (props) => {
   const sendCoupon = (email) => {
     email
       ? axios
-          .post(`${url}/api/admin/send-coupon-code`, {
-            Email: email,
-          },{
-            headers:{
-              "x-access-token":window.sessionStorage.getItem("Token")
+          .post(
+            `${url}/api/admin/send-coupon-code`,
+            {
+              Email: email,
+            },
+            {
+              headers: {
+                "x-access-token": window.sessionStorage.getItem("Token"),
+              },
             }
-          })
+          )
           .then((res) => {
             console.log(res);
             setMsgData(
@@ -75,8 +73,8 @@ const Coupons = (props) => {
           })
           .catch((err) => {
             console.log(err, err.response);
-            if(err?.response.status===401){
-              history.push('/');
+            if (err?.response.status === 401) {
+              history.push("/");
               sessionStorage.clear();
             }
             setMsgData(
@@ -121,17 +119,21 @@ const Coupons = (props) => {
   const addCouponHandler = (e) => {
     e.preventDefault();
     axios
-      .post(`${url}/api/admin/post-coupon-user`, {
-        Email: document.getElementById("school-email").value,
-        SchoolName: document.getElementById("school-name").value,
-        UserName: document.getElementById("user-name").value,
-        SchoolAddress: document.getElementById("school-address").value,
-        OfficePhone: document.getElementById("school-phone").value,
-      },{
-        headers:{
-          "x-access-token":window.sessionStorage.getItem("Token")
+      .post(
+        `${url}/api/admin/post-coupon-user`,
+        {
+          Email: document.getElementById("school-email").value,
+          SchoolName: document.getElementById("school-name").value,
+          UserName: document.getElementById("user-name").value,
+          SchoolAddress: document.getElementById("school-address").value,
+          OfficePhone: document.getElementById("school-phone").value,
+        },
+        {
+          headers: {
+            "x-access-token": window.sessionStorage.getItem("Token"),
+          },
         }
-      })
+      )
       .then((res) => {
         setMsgData(
           {
@@ -203,21 +205,23 @@ const Coupons = (props) => {
           </thead>
           <tbody>
             {couponsData &&
-              couponsData.map((school, key) => {
-                const d = new Date(school.createdAt);
-                const actived = new Date(school.activatedAt);
-                return (
-                  <tr key={key}>
-                    <th scope="row" className="fw-6">
-                      {key + 1}
-                    </th>
-                    <td>{d.toDateString()}</td>
-                    <td className="longLine mw-200">{school.SchoolName}</td>
-                    <td
-                      className="longLine mw-100 pt-cur"
-                      title={school.SchoolAddress}
-                    >
-                      {school.SchoolAddress ? (
+              couponsData
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map((school, key) => {
+                  const d = new Date(school.createdAt);
+                  const actived = new Date(school.activatedAt);
+                  return (
+                    <tr key={key}>
+                      <th scope="row" className="fw-6">
+                        {key + 1}
+                      </th>
+                      <td>{d.toDateString()}</td>
+                      <td className="longLine mw-200">{school.SchoolName}</td>
+                      <td
+                        className="longLine mw-100 pt-cur"
+                        title={school.SchoolAddress}
+                      >
+                        {school.SchoolAddress ? (
                           <span
                             className="copy-btn"
                             onClick={(event) => {
@@ -239,110 +243,127 @@ const Coupons = (props) => {
                             />
                             {school.SchoolAddress}
                           </span>
-                      ) : (
-                        ""
-                      )}
-                    </td>
-                    <td className="longLine mw-100">{school.OfficePhone}</td>
-                    <td>{school.UserName}</td>
-                    <td className="longLine mw-200"><a href={"mailto:"+school.Email} className="text-muted">{school.Email}</a></td>
-                    <td>
-                      {school.Coupon ? (
-                        school.redeem ? (
-                          <span className="text-success">{school.Coupon}</span>
                         ) : (
-                          <span className="text-primary">{school.Coupon}</span>
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </td>
-                    <td>{school.activatedAt ? actived.toDateString() : ""}</td>
-                    <td>
-                      <a
-                        href="/"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (
-                            window.confirm(
-                              "Do you really wants to resend the coupon?"
-                            )
-                          ) {
-                            sendCoupon(school.Email);
-                          }
-                        }}
-                        className={
-                          school.Coupon
-                            ? "c-ptr d-flex align-items-center justify-content-center text-success"
-                            : "c-ptr d-flex align-items-center justify-content-center"
-                        }
-                      >
-                        <Icon.Send
-                          size="18"
-                          strokeWidth="1.5"
-                          className="mr-2"
-                        />
-                        {school.Coupon ? "Resend" : "Send"}
-                      </a>
-                    </td>
-                    <td>
-                      {!school.redeem ? (
+                          ""
+                        )}
+                      </td>
+                      <td className="longLine mw-100">{school.OfficePhone}</td>
+                      <td>{school.UserName}</td>
+                      <td className="longLine mw-200">
+                        <a
+                          href={"mailto:" + school.Email}
+                          className="text-muted"
+                        >
+                          {school.Email}
+                        </a>
+                      </td>
+                      <td>
+                        {school.Coupon ? (
+                          school.redeem ? (
+                            <span className="text-success">
+                              {school.Coupon}
+                            </span>
+                          ) : (
+                            <span className="text-primary">
+                              {school.Coupon}
+                            </span>
+                          )
+                        ) : (
+                          ""
+                        )}
+                      </td>
+                      <td>
+                        {school.activatedAt ? actived.toDateString() : ""}
+                      </td>
+                      <td>
                         <a
                           href="/"
                           onClick={(e) => {
                             e.preventDefault();
                             if (
                               window.confirm(
-                                "Do you really wants to remove this Demo request?"
+                                "Do you really wants to resend the coupon?"
                               )
                             ) {
-                              axios
-                                .delete(
-                                  `${url}/api/admin/delete-coupon-user/${school.Email}`
-                                  ,{
-                                    headers:{
-                                      "x-access-token":window.sessionStorage.getItem("Token")
-                                    }
-                                  })
-                                .then((res) => {
-                                  console.log(res);
-                                  setMsgData(
-                                    {
-                                      message: res.data.message,
-                                      type: res.data.status,
-                                    } || null
-                                  );
-                                })
-                                .catch((err) => {
-                                  console.log(err, err.response);
-                                  if(err?.response.status===401){
-                                    history.push('/');
-                                    sessionStorage.clear();
-                                  }
-                                  setMsgData(
-                                    {
-                                      message: err.response.data.message,
-                                      type: err.response.status,
-                                    } || null
-                                  );
-                                });
+                              sendCoupon(school.Email);
                             }
                           }}
-                          className="c-ptr d-flex align-items-center justify-content-center text-danger"
+                          className={
+                            school.Coupon
+                              ? "c-ptr d-flex align-items-center justify-content-center text-success"
+                              : "c-ptr d-flex align-items-center justify-content-center"
+                          }
                         >
-                          <Icon.Delete
+                          <Icon.Send
                             size="18"
                             strokeWidth="1.5"
                             className="mr-2"
                           />
+                          {school.Coupon ? "Resend" : "Send"}
                         </a>
-                      ) : (
-                        ""
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
+                      </td>
+                      <td>
+                        {!school.redeem ? (
+                          <a
+                            href="/"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (
+                                window.confirm(
+                                  "Do you really wants to remove this Demo request?"
+                                )
+                              ) {
+                                axios
+                                  .delete(
+                                    `${url}/api/admin/delete-coupon-user/${school.Email}`,
+                                    {
+                                      headers: {
+                                        "x-access-token":
+                                          window.sessionStorage.getItem(
+                                            "Token"
+                                          ),
+                                      },
+                                    }
+                                  )
+                                  .then((res) => {
+                                    console.log(res);
+                                    setMsgData(
+                                      {
+                                        message: res.data.message,
+                                        type: res.data.status,
+                                      } || null
+                                    );
+                                  })
+                                  .catch((err) => {
+                                    console.log(err, err.response);
+                                    if (err?.response.status === 401) {
+                                      history.push("/");
+                                      sessionStorage.clear();
+                                    }
+                                    setMsgData(
+                                      {
+                                        message: err.response.data.message,
+                                        type: err.response.status,
+                                      } || null
+                                    );
+                                  });
+                              }
+                            }}
+                            className="c-ptr d-flex align-items-center justify-content-center text-danger"
+                          >
+                            <Icon.Delete
+                              size="18"
+                              strokeWidth="1.5"
+                              className="mr-2"
+                            />
+                          </a>
+                        ) : (
+                          ""
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
           </tbody>
         </table>
         <div
