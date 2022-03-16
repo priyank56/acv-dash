@@ -155,7 +155,7 @@ const Contact = () => {
                                 }
                               )
                               .then((res) => {
-                                console.log(res);
+                                // console.log(res);
                                 setMsgData(
                                   {
                                     message: res.data.message,

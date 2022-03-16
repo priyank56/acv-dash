@@ -128,7 +128,7 @@ const Header = (props) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 const search = document.getElementById("input-search").value;
-                console.log(search);
+                // console.log(search);
                 axios
                   .post(
                     `${url}/api/admin/search-coupon-by-school`,
@@ -143,7 +143,7 @@ const Header = (props) => {
                     }
                   )
                   .then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     props.setcouponsData(res.data.result || null);
                   })
                   .catch((err) => {

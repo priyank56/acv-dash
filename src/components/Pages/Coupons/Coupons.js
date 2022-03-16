@@ -28,7 +28,7 @@ const Coupons = (props) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setcouponsData(res.data.result || null);
       })
       .catch((err) => {
@@ -66,7 +66,7 @@ const Coupons = (props) => {
             }
           )
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             setMsgData(
               { message: res.data.message, type: res.data.status } || null
             );
@@ -149,7 +149,7 @@ const Coupons = (props) => {
         document.getElementById("school-phone").value = "";
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         setMsgData(
           { message: err.response.data.message, type: err.response.status } ||
             null
@@ -326,7 +326,7 @@ const Coupons = (props) => {
                                     }
                                   )
                                   .then((res) => {
-                                    console.log(res);
+                                    // console.log(res);
                                     setMsgData(
                                       {
                                         message: res.data.message,
