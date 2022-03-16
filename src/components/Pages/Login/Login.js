@@ -102,7 +102,7 @@ const Login = () => {
                     ></div>
                     <form id="login-form" onSubmit={(e) => validateInfo(e)}>
                       <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email">Email:</label>
                         <input
                           type="email"
                           id="email"
@@ -111,7 +111,7 @@ const Login = () => {
                         />
                       </div>
                       <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Password:</label>
                         <input
                           type="password"
                           id="password"
